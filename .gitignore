@@ -2,6 +2,7 @@
 *.o
 *.a
 *.so
+/main/gocker
 
 # Folders
 _obj
@@ -21,3 +22,4 @@ _testmain.go
 
 *.exe
 *.test
+*.swp
