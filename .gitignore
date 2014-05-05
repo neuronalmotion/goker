@@ -3,6 +3,7 @@
 *.a
 *.so
 /main/gocker
+gocker
 
 # Folders
 _obj

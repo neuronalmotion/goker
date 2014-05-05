@@ -1,12 +1,11 @@
 package main
 
 import (
-    "fmt"
-    "github.com/neuronalmotion/gocker"
+	"fmt"
+	"github.com/neuronalmotion/gocker"
 )
 
 func main() {
-    fmt.Println("Hello world!")
-    gocker.DatabaseInit()
+	fmt.Println("Hello world!")
+	gocker.DatabaseInit()
 }
-
