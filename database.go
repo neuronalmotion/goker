@@ -26,9 +26,18 @@ func DBClose() {
 	GockerCtx.DB.Close()
 }
 
+func DBClear() {
+	log.Print("Dropping database tables...")
+	defer log.Println("done")
+	GockerCtx.DB.DropTable(User{})
+	GockerCtx.DB.DropTable(League{})
+	GockerCtx.DB.DropTable(Game{})
+	GockerCtx.DB.DropTable(GameResult{})
+}
+
 // Init default database by dropping recreating tables with default data
-func InitDefaultDatabaseData() {
-	dropTables()
+func DBDefaultData() {
+	DBClear()
 	createDefaultData()
 }
 
@@ -37,15 +46,6 @@ func createTables() {
 	GockerCtx.DB.AutoMigrate(League{})
 	GockerCtx.DB.AutoMigrate(Game{})
 	GockerCtx.DB.AutoMigrate(GameResult{})
-}
-
-func dropTables() {
-	log.Print("Dropping database tables...")
-	defer log.Println("done")
-	GockerCtx.DB.DropTable(User{})
-	GockerCtx.DB.DropTable(League{})
-	GockerCtx.DB.DropTable(Game{})
-	GockerCtx.DB.DropTable(GameResult{})
 }
 
 func createDefaultData() {

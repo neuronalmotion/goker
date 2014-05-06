@@ -1,9 +1,10 @@
 package gocker
 
 import (
+    "flag"
+	"log"
 	"code.google.com/p/gcfg"
 	"github.com/jinzhu/gorm"
-	"log"
 )
 
 var GockerCtx GockerGockerCtx
@@ -13,6 +14,11 @@ type GockerGockerCtx struct {
 	DB  gorm.DB
 }
 
+// CLI parsing data
+var cliDbClear = flag.Bool("db-clear", false, "recreate an empty tables structure")
+var cliDbDefault = flag.Bool("db-default", false, "clear tables and create default data")
+
+// Configuration flag data
 type Config struct {
 	Database struct {
 		Name     string
@@ -35,3 +41,14 @@ func init() {
 	}
 	log.Println("Config file loaded")
 }
+
+func HandleArgs() {
+    flag.Parse()
+    if *cliDbClear {
+        DBClear()
+    }
+    if *cliDbDefault {
+        DBDefaultData()
+    }
+}
+

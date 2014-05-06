@@ -8,10 +8,9 @@ import (
 
 func main() {
     // database
-    gocker.InitDefaultDatabaseData()
-	defer gocker.DBClose()
-
+    gocker.HandleArgs()
     h := gocker.HttpHandler()
+	defer gocker.DBClose()
 
     // start the engine!
 	log.Println("Server listen on port 8000...")
