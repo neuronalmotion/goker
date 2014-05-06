@@ -2,29 +2,36 @@ package gocker
 
 import (
 	"fmt"
-	"time"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" // used by gorm
 	"github.com/jinzhu/gorm"
+	"log"
+	"time"
 )
 
 var DB gorm.DB
 
 func init() {
-    username := "root"
-    password := ""
-    database := "neuronalpoker"
-    connectionStr := fmt.Sprintf("%v:%v@/%v?charset=utf8&parseTime=True", username, password, database)
-    fmt.Println("Trying to connect to dababase: ", connectionStr)
-    var err error
-    DB, err = gorm.Open("mysql", connectionStr)
-    if err != nil {
-        panic(fmt.Sprintf("Got error when connect database, the error is '%v'", err))
-    }
+	connectionStr := fmt.Sprintf("%v:%v@/%v?charset=utf8&parseTime=True",
+		Cfg.Database.User,
+		Cfg.Database.Password,
+		Cfg.Database.Name)
+	log.Println("Trying to connect to dababase: ", connectionStr)
+	var err error
+	DB, err = gorm.Open("mysql", connectionStr)
+	if err != nil {
+		log.Panicf("Got error when connect database, the error is '%v'", err)
+	}
 	createTables()
 }
 
 func DBClose() {
-    DB.Close()
+	DB.Close()
+}
+
+// Init default database by dropping recreating tables with default data
+func InitDefaultDatabaseData() {
+	dropTables()
+	createDefaultData()
 }
 
 func createTables() {
@@ -35,7 +42,8 @@ func createTables() {
 }
 
 func dropTables() {
-    fmt.Println("Dropping database tables...")
+	log.Print("Dropping database tables...")
+	defer log.Println("done")
 	DB.DropTable(User{})
 	DB.DropTable(League{})
 	DB.DropTable(Game{})
@@ -43,8 +51,9 @@ func dropTables() {
 }
 
 func createDefaultData() {
-    fmt.Println("Creating default database data...")
-    createTables()
+	log.Print("Creating default database data...")
+	defer log.Print("done")
+	createTables()
 	//db.Debug().Unscoped().Where("login = ?", "guillaume").Delete(User{})
 
 	user1 := User{
@@ -69,9 +78,4 @@ func createDefaultData() {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now()}
 	DB.Save(&league)
-
-}
-func InitDefaultDatabaseData() {
-	dropTables()
-	createDefaultData()
 }

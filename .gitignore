@@ -2,8 +2,6 @@
 *.o
 *.a
 *.so
-/main/gocker
-gocker
 
 # Folders
 _obj
@@ -24,3 +22,7 @@ _testmain.go
 *.exe
 *.test
 *.swp
+
+# Gocker data
+gocker
+config.gcfg

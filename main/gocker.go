@@ -2,8 +2,8 @@ package main
 
 import (
     "encoding/json"
-	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"github.com/neuronalmotion/gocker"
 	"github.com/jinzhu/gorm"
@@ -61,7 +61,7 @@ func main() {
 	http.Handle("/", r)
 
     // start the engine!
-	fmt.Println("Server listen on port 8000...")
+	log.Println("Server listen on port 8000...")
 	http.ListenAndServe(":8000", nil)
 
 }
