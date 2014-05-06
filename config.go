@@ -2,12 +2,16 @@ package gocker
 
 import (
 	"code.google.com/p/gcfg"
+	"github.com/jinzhu/gorm"
 	"log"
 )
 
-const configFile string = "config.gcfg"
+var GockerCtx GockerGockerCtx
 
-var Cfg Config
+type GockerGockerCtx struct {
+	Cfg Config
+	DB  gorm.DB
+}
 
 type Config struct {
 	Database struct {
@@ -17,13 +21,15 @@ type Config struct {
 	}
 }
 
+const configFile string = "config.gcfg"
+
 func init() {
 	// configure logging system
 	log.SetPrefix("Gocker ")
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	// load config file
-	err := gcfg.ReadFileInto(&Cfg, configFile)
+	err := gcfg.ReadFileInto(&GockerCtx.Cfg, configFile)
 	if err != nil {
 		log.Fatalf("Failed to parse config file: %s", err)
 	}

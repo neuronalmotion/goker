@@ -8,16 +8,14 @@ import (
 	"time"
 )
 
-var DB gorm.DB
-
 func init() {
 	connectionStr := fmt.Sprintf("%v:%v@/%v?charset=utf8&parseTime=True",
-		Cfg.Database.User,
-		Cfg.Database.Password,
-		Cfg.Database.Name)
+		GockerCtx.Cfg.Database.User,
+		GockerCtx.Cfg.Database.Password,
+		GockerCtx.Cfg.Database.Name)
 	log.Println("Trying to connect to dababase: ", connectionStr)
 	var err error
-	DB, err = gorm.Open("mysql", connectionStr)
+	GockerCtx.DB, err = gorm.Open("mysql", connectionStr)
 	if err != nil {
 		log.Panicf("Got error when connect database, the error is '%v'", err)
 	}
@@ -25,7 +23,7 @@ func init() {
 }
 
 func DBClose() {
-	DB.Close()
+	GockerCtx.DB.Close()
 }
 
 // Init default database by dropping recreating tables with default data
@@ -35,19 +33,19 @@ func InitDefaultDatabaseData() {
 }
 
 func createTables() {
-	DB.AutoMigrate(User{})
-	DB.AutoMigrate(League{})
-	DB.AutoMigrate(Game{})
-	DB.AutoMigrate(GameResult{})
+	GockerCtx.DB.AutoMigrate(User{})
+	GockerCtx.DB.AutoMigrate(League{})
+	GockerCtx.DB.AutoMigrate(Game{})
+	GockerCtx.DB.AutoMigrate(GameResult{})
 }
 
 func dropTables() {
 	log.Print("Dropping database tables...")
 	defer log.Println("done")
-	DB.DropTable(User{})
-	DB.DropTable(League{})
-	DB.DropTable(Game{})
-	DB.DropTable(GameResult{})
+	GockerCtx.DB.DropTable(User{})
+	GockerCtx.DB.DropTable(League{})
+	GockerCtx.DB.DropTable(Game{})
+	GockerCtx.DB.DropTable(GameResult{})
 }
 
 func createDefaultData() {
@@ -62,7 +60,7 @@ func createDefaultData() {
 		Name:      "guillaume lazar",
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now()}
-	DB.Save(&user1)
+	GockerCtx.DB.Save(&user1)
 
 	user2 := User{
 		Login:     "robin",
@@ -70,12 +68,12 @@ func createDefaultData() {
 		Name:      "robin penea",
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now()}
-	DB.Save(&user2)
+	GockerCtx.DB.Save(&user2)
 
 	league := League{
 		Name:      "league-test",
 		Users:     []User{user1, user2},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now()}
-	DB.Save(&league)
+	GockerCtx.DB.Save(&league)
 }
