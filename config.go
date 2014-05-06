@@ -1,10 +1,11 @@
 package gocker
 
 import (
-    "flag"
-	"log"
 	"code.google.com/p/gcfg"
+	"flag"
+	"fmt"
 	"github.com/jinzhu/gorm"
+	"log"
 )
 
 var GockerCtx GockerGockerCtx
@@ -25,6 +26,14 @@ type Config struct {
 		User     string
 		Password string
 	}
+	App struct {
+		Host string
+		Port int
+	}
+}
+
+func (c *Config) Addr() string {
+	return fmt.Sprintf("%s:%d", c.App.Host, c.App.Port)
 }
 
 const configFile string = "config.gcfg"
@@ -43,12 +52,11 @@ func init() {
 }
 
 func HandleArgs() {
-    flag.Parse()
-    if *cliDbClear {
-        DBClear()
-    }
-    if *cliDbDefault {
-        DBDefaultData()
-    }
+	flag.Parse()
+	if *cliDbClear {
+		DBClear()
+	}
+	if *cliDbDefault {
+		DBDefaultData()
+	}
 }
-

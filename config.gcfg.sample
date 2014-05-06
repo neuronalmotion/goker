@@ -4,3 +4,6 @@ name = neuronalpoker
 user = root
 password = root 
 
+[app]
+host = localhost
+port = 8000
