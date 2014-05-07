@@ -54,7 +54,6 @@ func (u *User) Put(w rest.ResponseWriter, r *rest.Request) {
 		return
 	}
 
-	// TODO what should we do with the password?
 	user.Login = updated.Login
 	user.Email = updated.Email
 	user.Name = updated.Name
@@ -79,4 +78,16 @@ func (u *User) Delete(w rest.ResponseWriter, r *rest.Request) {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func (u *User) GetLeagues(w rest.ResponseWriter, r *rest.Request) {
+    id := r.PathParam("id")
+	user := User{}
+	if GockerCtx.DB.First(&user, id).Error != nil {
+		rest.NotFound(w, r)
+		return
+	}
+
+    user.Leagues = DBGetLeaguesForUser(user.Id)
+    w.WriteJson(&user.Leagues)
 }

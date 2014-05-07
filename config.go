@@ -8,9 +8,9 @@ import (
 	"log"
 )
 
-var GockerCtx GockerGockerCtx
+var GockerCtx GockerContext
 
-type GockerGockerCtx struct {
+type GockerContext struct {
 	Cfg Config
 	DB  gorm.DB
 }
