@@ -11,16 +11,17 @@ func HttpHandler() (h *rest.ResourceHandler) {
 
 	user := User{}
 	league := League{}
+	prefix := GockerCtx.Cfg.App.UrlPrefix
 	h.SetRoutes(
-		rest.RouteObjectMethod("GET", "/users/", &user, "GetAll"),
-		rest.RouteObjectMethod("POST", "/users/", &user, "Post"),
-		rest.RouteObjectMethod("GET", "/users/:id", &user, "Get"),
-		rest.RouteObjectMethod("PUT", "/users/:id", &user, "Put"),
-		rest.RouteObjectMethod("DELETE", "/users/:id", &user, "Delete"),
-		rest.RouteObjectMethod("GET", "/users/:id/leagues/", &user, "GetLeagues"),
+		rest.RouteObjectMethod("GET", prefix+"/users", &user, "GetAll"),
+		rest.RouteObjectMethod("POST", prefix+"/users", &user, "Post"),
+		rest.RouteObjectMethod("GET", prefix+"/users/:id", &user, "Get"),
+		rest.RouteObjectMethod("PUT", prefix+"/users/:id", &user, "Put"),
+		rest.RouteObjectMethod("DELETE", prefix+"/users/:id", &user, "Delete"),
+		rest.RouteObjectMethod("GET", prefix+"/users/:id/leagues", &user, "GetLeagues"),
 
-        rest.RouteObjectMethod("GET", "/leagues/", &league, "GetAll"),
-        rest.RouteObjectMethod("GET", "/leagues/:id", &league, "Get"),
+		rest.RouteObjectMethod("GET", prefix+"/leagues", &league, "GetAll"),
+		rest.RouteObjectMethod("GET", prefix+"/leagues/:id", &league, "Get"),
 	)
 	return
 }

@@ -27,8 +27,9 @@ type Config struct {
 		Password string
 	}
 	App struct {
-		Host string
-		Port int
+		Host      string
+		Port      int
+		UrlPrefix string
 	}
 }
 

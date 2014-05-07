@@ -7,3 +7,4 @@ password = root
 [app]
 host = localhost
 port = 8000
+urlprefix = /api

@@ -11,8 +11,8 @@ type User struct {
 	Password  string    `json:"-" sql:"size:255"`
 	Email     string    `json:"email" sql:"type:varchar(100)"`
 	Name      string    `json:"name" sql:"size:255"`
-    Leagues   []League `json:"-"`
-    Games   []Game `json:"-"`
+	Leagues   []League  `json:"-"`
+	Games     []Game    `json:"-"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 	DeletedAt time.Time `json:"-"`
@@ -21,8 +21,8 @@ type User struct {
 type League struct {
 	Id        int64  `json:"id"`
 	Name      string `json:"name" sql:"size:255"`
-    OwnerId int64 `json:"-"`
-    Owner User
+	OwnerId   int64  `json:"-"`
+	Owner     User
 	Users     []User
 	Games     []Game
 	CreatedAt time.Time `json:"createdAt"`
@@ -33,12 +33,12 @@ const GameTypeSitAndGo = "sitandgo"
 const GameTypeCashGame = "cashgame"
 
 type Game struct {
-	Id      int64  `json:"id"`
-	Type    string `json:"type" sql:"not null"`
-    LeagueId int64 `json:"leagueId"`
-    League League `json:"-"`
-	Users   []User
-	Results []GameResult
+	Id       int64  `json:"id"`
+	Type     string `json:"type" sql:"not null"`
+	LeagueId int64  `json:"leagueId"`
+	League   League `json:"-"`
+	Users    []User
+	Results  []GameResult
 }
 
 type GameResult struct {
@@ -49,18 +49,17 @@ type GameResult struct {
 }
 
 type UserLeague struct {
-    Id int64 
-    UserId int64
-    User User
-    LeagueId int64
-    League League
+	Id       int64
+	UserId   int64
+	User     User
+	LeagueId int64
+	League   League
 }
 
 type UserGame struct {
-    Id int64 
-    UserId int64
-    User User
-    GameId int64
-    Game Game
+	Id     int64
+	UserId int64
+	User   User
+	GameId int64
+	Game   Game
 }
-

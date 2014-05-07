@@ -13,9 +13,9 @@ import (
 func (u *League) GetAll(w rest.ResponseWriter, r *rest.Request) {
 	leagues := []League{}
 	GockerCtx.DB.Find(&leagues)
-    for i := 0; i< len(leagues); i++ {
-        FillLeagueData(&leagues[i])
-    }
+	for i := 0; i < len(leagues); i++ {
+		FillLeagueData(&leagues[i])
+	}
 	w.WriteJson(&leagues)
 }
 
@@ -26,7 +26,7 @@ func (u *League) Get(w rest.ResponseWriter, r *rest.Request) {
 		rest.NotFound(w, r)
 		return
 	}
-    FillLeagueData(&league)
+	FillLeagueData(&league)
 	w.WriteJson(&league)
 }
 
@@ -59,8 +59,8 @@ func (u *League) Put(w rest.ResponseWriter, r *rest.Request) {
 	}
 
 	league.Name = updated.Name
-    league.Users = updated.Users
-    league.Games = updated.Games
+	league.Users = updated.Users
+	league.Games = updated.Games
 	league.UpdatedAt = time.Now()
 
 	if err := GockerCtx.DB.Save(&league).Error; err != nil {

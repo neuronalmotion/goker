@@ -81,13 +81,13 @@ func (u *User) Delete(w rest.ResponseWriter, r *rest.Request) {
 }
 
 func (u *User) GetLeagues(w rest.ResponseWriter, r *rest.Request) {
-    id := r.PathParam("id")
+	id := r.PathParam("id")
 	user := User{}
 	if GockerCtx.DB.First(&user, id).Error != nil {
 		rest.NotFound(w, r)
 		return
 	}
 
-    user.Leagues = DBGetLeaguesForUser(user.Id)
-    w.WriteJson(&user.Leagues)
+	user.Leagues = DBGetLeaguesForUser(user.Id)
+	w.WriteJson(&user.Leagues)
 }
