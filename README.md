@@ -1,4 +1,4 @@
-Gocker
+Goker
 ========
 
 Go backend of poker games management
