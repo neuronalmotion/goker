@@ -1,4 +1,4 @@
-package gocker
+package goker
 
 import (
 	"code.google.com/p/gcfg"
@@ -8,9 +8,9 @@ import (
 	"log"
 )
 
-var GockerCtx GockerContext
+var GokerCtx GokerContext
 
-type GockerContext struct {
+type GokerContext struct {
 	Cfg Config
 	DB  gorm.DB
 }
@@ -41,11 +41,11 @@ const configFile string = "config.gcfg"
 
 func init() {
 	// configure logging system
-	log.SetPrefix("Gocker ")
+	log.SetPrefix("goker ")
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	// load config file
-	err := gcfg.ReadFileInto(&GockerCtx.Cfg, configFile)
+	err := gcfg.ReadFileInto(&GokerCtx.Cfg, configFile)
 	if err != nil {
 		log.Fatalf("Failed to parse config file: %s", err)
 	}

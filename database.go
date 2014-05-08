@@ -1,4 +1,4 @@
-package gocker
+package goker
 
 import (
 	"fmt"
@@ -10,12 +10,12 @@ import (
 
 func init() {
 	connectionStr := fmt.Sprintf("%v:%v@/%v?charset=utf8&parseTime=True",
-		GockerCtx.Cfg.Database.User,
-		GockerCtx.Cfg.Database.Password,
-		GockerCtx.Cfg.Database.Name)
+		GokerCtx.Cfg.Database.User,
+		GokerCtx.Cfg.Database.Password,
+		GokerCtx.Cfg.Database.Name)
 	log.Println("Trying to connect to dababase: ", connectionStr)
 	var err error
-	GockerCtx.DB, err = gorm.Open("mysql", connectionStr)
+	GokerCtx.DB, err = gorm.Open("mysql", connectionStr)
 	if err != nil {
 		log.Panicf("Got error when connect database, the error is '%v'", err)
 	}
@@ -23,18 +23,18 @@ func init() {
 }
 
 func DBClose() {
-	GockerCtx.DB.Close()
+	GokerCtx.DB.Close()
 }
 
 func DBClear() {
 	log.Print("Dropping database tables...")
 	defer log.Println("done")
-	GockerCtx.DB.DropTable(User{})
-	GockerCtx.DB.DropTable(League{})
-	GockerCtx.DB.DropTable(Game{})
-	GockerCtx.DB.DropTable(GameResult{})
-	GockerCtx.DB.DropTable(UserLeague{})
-	GockerCtx.DB.DropTable(UserGame{})
+	GokerCtx.DB.DropTable(User{})
+	GokerCtx.DB.DropTable(Cup{})
+	GokerCtx.DB.DropTable(Game{})
+	GokerCtx.DB.DropTable(Score{})
+	GokerCtx.DB.DropTable(UserCup{})
+	GokerCtx.DB.DropTable(UserGame{})
 }
 
 // Init default database by dropping recreating tables with default data
@@ -43,46 +43,46 @@ func DBDefaultData() {
 	createDefaultData()
 }
 
-func FillLeagueData(league *League) {
-	GockerCtx.DB.Model(league).Related(&league.Owner, "OwnerId")
-	league.Users = DBGetUsersForLeague(league.Id)
-	GockerCtx.DB.Model(league).Related(&league.Games)
+func FillCupData(cup *Cup) {
+	GokerCtx.DB.Model(cup).Related(&cup.Owner, "OwnerId")
+	cup.Users = DBGetUsersForCup(cup.Id)
+	GokerCtx.DB.Model(cup).Related(&cup.Games)
 }
 
-func DBGetLeaguesForUser(userId int64) []League {
-	leagues := []League{}
-	GockerCtx.DB.Debug().Raw("SELECT l.id, l.name, l.owner_id, l.created_at, l.updated_at FROM leagues l, user_leagues WHERE l.id = user_leagues.league_id AND user_leagues.user_id = ?", userId).Scan(&leagues)
-	for i := 0; i < len(leagues); i++ {
-		FillLeagueData(&leagues[i])
+func DBGetCupsForUser(userId int64) []Cup {
+	cups := []Cup{}
+	GokerCtx.DB.Debug().Raw("SELECT l.id, l.name, l.owner_id, l.created_at, l.updated_at FROM cups l, user_cups WHERE l.id = user_cups.cup_id AND user_cups.user_id = ?", userId).Scan(&cups)
+	for i := 0; i < len(cups); i++ {
+		FillCupData(&cups[i])
 	}
-	return leagues
+	return cups
 }
 
-func DBGetUsersForLeague(leagueId int64) []User {
+func DBGetUsersForCup(cupId int64) []User {
 	users := []User{}
-	GockerCtx.DB.Raw("SELECT u.id, u.login, u.password, u.email, u.name, u.created_at, u.updated_at, u.deleted_at FROM users u, user_leagues ul WHERE u.id = ul.user_id AND ul.league_id = ?", leagueId).Scan(&users)
+	GokerCtx.DB.Raw("SELECT u.id, u.login, u.password, u.email, u.name, u.created_at, u.updated_at, u.deleted_at FROM users u, user_cups ul WHERE u.id = ul.user_id AND ul.cup_id = ?", cupId).Scan(&users)
 	return users
 }
 
 func DBGetUsersForGame(gameId int64) []User {
 	users := []User{}
-	GockerCtx.DB.Raw("SELECT u.id, u.login, u.password, u.email, u.name, u.created_at, u.updated_at, u.deleted_at FROM users u, user_games ug WHERE u.id = ug.user_id AND ug.game_id = ?", gameId).Scan(&users)
+	GokerCtx.DB.Raw("SELECT u.id, u.login, u.password, u.email, u.name, u.created_at, u.updated_at, u.deleted_at FROM users u, user_games ug WHERE u.id = ug.user_id AND ug.game_id = ?", gameId).Scan(&users)
 	return users
 }
 
 func DBGetGamesForUser(userId int64) []Game {
 	games := []Game{}
-	GockerCtx.DB.Debug().Raw("SELECT g.id, g.type, g.league_id FROM games g, user_games ug WHERE g.id = ug.game_id AND ug.user_id = ?", userId).Scan(&games)
+	GokerCtx.DB.Debug().Raw("SELECT g.id, g.type, g.cup_id FROM games g, user_games ug WHERE g.id = ug.game_id AND ug.user_id = ?", userId).Scan(&games)
 	return games
 }
 
 func createTables() {
-	GockerCtx.DB.AutoMigrate(User{})
-	GockerCtx.DB.AutoMigrate(League{})
-	GockerCtx.DB.AutoMigrate(Game{})
-	GockerCtx.DB.AutoMigrate(GameResult{})
-	GockerCtx.DB.AutoMigrate(UserLeague{})
-	GockerCtx.DB.AutoMigrate(UserGame{})
+	GokerCtx.DB.AutoMigrate(User{})
+	GokerCtx.DB.AutoMigrate(Cup{})
+	GokerCtx.DB.AutoMigrate(Game{})
+	GokerCtx.DB.AutoMigrate(Score{})
+	GokerCtx.DB.AutoMigrate(UserCup{})
+	GokerCtx.DB.AutoMigrate(UserGame{})
 }
 
 func createDefaultData() {
@@ -97,7 +97,7 @@ func createDefaultData() {
 		Name:      "guillaume lazar",
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now()}
-	GockerCtx.DB.Save(&user1)
+	GokerCtx.DB.Save(&user1)
 
 	user2 := User{
 		Login:     "robin",
@@ -105,22 +105,22 @@ func createDefaultData() {
 		Name:      "robin penea",
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now()}
-	GockerCtx.DB.Save(&user2)
+	GokerCtx.DB.Save(&user2)
 
-	league := League{
-		Name:      "league-test",
+	cup := Cup{
+		Name:      "cup-test",
 		Owner:     user1,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now()}
-	GockerCtx.DB.Save(&league)
+	GokerCtx.DB.Save(&cup)
 
-	GockerCtx.DB.Save(&UserLeague{User: user1, League: league})
-	GockerCtx.DB.Save(&UserLeague{User: user2, League: league})
+	GokerCtx.DB.Save(&UserCup{User: user1, Cup: cup})
+	GokerCtx.DB.Save(&UserCup{User: user2, Cup: cup})
 
 	// Game data
-	game := Game{Type: GameTypeCashGame, League: league}
-	GockerCtx.DB.Save(&game)
+	game := Game{Type: GameTypeCashGame, Cup: cup}
+	GokerCtx.DB.Save(&game)
 
-	GockerCtx.DB.Save(&UserGame{User: user1, Game: game})
-	GockerCtx.DB.Save(&UserGame{User: user2, Game: game})
+	GokerCtx.DB.Save(&UserGame{User: user1, Game: game})
+	GokerCtx.DB.Save(&UserGame{User: user2, Game: game})
 }

@@ -1,4 +1,4 @@
-package gocker
+package goker
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
@@ -12,14 +12,14 @@ import (
 
 func (u *User) GetAll(w rest.ResponseWriter, r *rest.Request) {
 	users := []User{}
-	GockerCtx.DB.Find(&users)
+	GokerCtx.DB.Find(&users)
 	w.WriteJson(&users)
 }
 
 func (u *User) Get(w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	user := User{}
-	if GockerCtx.DB.First(&user, id).Error != nil {
+	if GokerCtx.DB.First(&user, id).Error != nil {
 		rest.NotFound(w, r)
 		return
 	}
@@ -33,7 +33,7 @@ func (u *User) Post(w rest.ResponseWriter, r *rest.Request) {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if err := GockerCtx.DB.Save(&user).Error; err != nil {
+	if err := GokerCtx.DB.Save(&user).Error; err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -43,7 +43,7 @@ func (u *User) Post(w rest.ResponseWriter, r *rest.Request) {
 func (u *User) Put(w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	user := User{}
-	if GockerCtx.DB.First(&user, id).Error != nil {
+	if GokerCtx.DB.First(&user, id).Error != nil {
 		rest.NotFound(w, r)
 		return
 	}
@@ -59,7 +59,7 @@ func (u *User) Put(w rest.ResponseWriter, r *rest.Request) {
 	user.Name = updated.Name
 	user.UpdatedAt = time.Now()
 
-	if err := GockerCtx.DB.Save(&user).Error; err != nil {
+	if err := GokerCtx.DB.Save(&user).Error; err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -69,25 +69,25 @@ func (u *User) Put(w rest.ResponseWriter, r *rest.Request) {
 func (u *User) Delete(w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	user := User{}
-	if GockerCtx.DB.First(&user, id).Error != nil {
+	if GokerCtx.DB.First(&user, id).Error != nil {
 		rest.NotFound(w, r)
 		return
 	}
 
-	if err := GockerCtx.DB.Delete(&user).Error; err != nil {
+	if err := GokerCtx.DB.Delete(&user).Error; err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
-func (u *User) GetLeagues(w rest.ResponseWriter, r *rest.Request) {
+func (u *User) GetCups(w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	user := User{}
-	if GockerCtx.DB.First(&user, id).Error != nil {
+	if GokerCtx.DB.First(&user, id).Error != nil {
 		rest.NotFound(w, r)
 		return
 	}
 
-	user.Leagues = DBGetLeaguesForUser(user.Id)
-	w.WriteJson(&user.Leagues)
+	user.Cups = DBGetCupsForUser(user.Id)
+	w.WriteJson(&user.Cups)
 }

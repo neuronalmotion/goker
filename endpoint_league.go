@@ -1,4 +1,4 @@
-package gocker
+package goker
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
@@ -7,78 +7,78 @@ import (
 )
 
 // ---------------------------------------------------
-// League endpoint
+// Cup endpoint
 // ---------------------------------------------------
 
-func (u *League) GetAll(w rest.ResponseWriter, r *rest.Request) {
-	leagues := []League{}
-	GockerCtx.DB.Find(&leagues)
-	for i := 0; i < len(leagues); i++ {
-		FillLeagueData(&leagues[i])
+func (u *Cup) GetAll(w rest.ResponseWriter, r *rest.Request) {
+	cups := []Cup{}
+	GokerCtx.DB.Find(&cups)
+	for i := 0; i < len(cups); i++ {
+		FillCupData(&cups[i])
 	}
-	w.WriteJson(&leagues)
+	w.WriteJson(&cups)
 }
 
-func (u *League) Get(w rest.ResponseWriter, r *rest.Request) {
+func (u *Cup) Get(w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
-	league := League{}
-	if GockerCtx.DB.First(&league, id).Error != nil {
+	cup := Cup{}
+	if GokerCtx.DB.First(&cup, id).Error != nil {
 		rest.NotFound(w, r)
 		return
 	}
-	FillLeagueData(&league)
-	w.WriteJson(&league)
+	FillCupData(&cup)
+	w.WriteJson(&cup)
 }
 
-func (u *League) Post(w rest.ResponseWriter, r *rest.Request) {
-	league := League{}
-	err := r.DecodeJsonPayload(&league)
+func (u *Cup) Post(w rest.ResponseWriter, r *rest.Request) {
+	cup := Cup{}
+	err := r.DecodeJsonPayload(&cup)
 	if err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if err := GockerCtx.DB.Save(&league).Error; err != nil {
+	if err := GokerCtx.DB.Save(&cup).Error; err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.WriteJson(&league)
+	w.WriteJson(&cup)
 }
 
-func (u *League) Put(w rest.ResponseWriter, r *rest.Request) {
+func (u *Cup) Put(w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
-	league := League{}
-	if GockerCtx.DB.First(&league, id).Error != nil {
+	cup := Cup{}
+	if GokerCtx.DB.First(&cup, id).Error != nil {
 		rest.NotFound(w, r)
 		return
 	}
 
-	updated := League{}
+	updated := Cup{}
 	if err := r.DecodeJsonPayload(&updated); err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	league.Name = updated.Name
-	league.Users = updated.Users
-	league.Games = updated.Games
-	league.UpdatedAt = time.Now()
+	cup.Name = updated.Name
+	cup.Users = updated.Users
+	cup.Games = updated.Games
+	cup.UpdatedAt = time.Now()
 
-	if err := GockerCtx.DB.Save(&league).Error; err != nil {
+	if err := GokerCtx.DB.Save(&cup).Error; err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.WriteJson(&league)
+	w.WriteJson(&cup)
 }
 
-func (u *League) Delete(w rest.ResponseWriter, r *rest.Request) {
+func (u *Cup) Delete(w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
-	league := League{}
-	if GockerCtx.DB.First(&league, id).Error != nil {
+	cup := Cup{}
+	if GokerCtx.DB.First(&cup, id).Error != nil {
 		rest.NotFound(w, r)
 		return
 	}
 
-	if err := GockerCtx.DB.Delete(&league).Error; err != nil {
+	if err := GokerCtx.DB.Delete(&cup).Error; err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

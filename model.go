@@ -1,4 +1,4 @@
-package gocker
+package goker
 
 import (
 	_ "database/sql"
@@ -36,7 +36,7 @@ const GameTypeCashGame = "cashgame"
 type Game struct {
 	Id       int64  `json:"id"`
 	Type     string `json:"type" sql:"not null"`
-	CupId int64  `json:"leagueId"`
+	CupId int64  `json:"cupId"`
 	Cup   Cup `json:"-"`
 	Users    []User
 	Scores  []Score
